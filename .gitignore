@@ -1,0 +1,79 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+.history/
+
+# Build outputs
+**/bin/
+**/obj/
+bin/
+obj/
+out/
+
+# NuGet
+*.nupkg
+packages/
+project.lock.json
+
+# EF migrations / local DBs
+*.db
+*.sqlite
+*.db3
+*.mdf
+*.ldf
+
+# Logs
+logs/
+*.log
+TestResults/
+*.trx
+coverage/
+*.coverage
+*.coveragexml
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment / secrets
+.env
+.env.*
+secrets.json
+appsettings.*.json
+
+# Docker
+docker-compose.override.yml
+docker-compose.*.yml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Misc
+*.vsix
+*.class
+
+# Ignore local launch settings
+Properties/launchSettings.json
+
+# Ignore publish output
+**/publish/
+
+# Ignore JetBrains caches
+.idea/
+
+# Optional: ignore generated editor/IDE files
+*.log
+
+# End of .gitignore
