@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TripService.Api.Data;
 
-public class TripDbContext(DbContextOptions<TripDbContext> options) : DbContext(options), DbContext
+public class TripDbContext(DbContextOptions<TripDbContext> options) : DbContext(options)
 {
     public DbSet<Trip> Trips { get; set; } = null!;
 }

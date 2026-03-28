@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace NotificationService.Api.Data;
 
-public class NotificationDbContext(DbContextOptions<NotificationDbContext> options) : DbContext(options), DbContext
+public class NotificationDbContext(DbContextOptions<NotificationDbContext> options) : DbContext(options)
 {
     public DbSet<Notification> Notifications { get; set; } = null!;
 }

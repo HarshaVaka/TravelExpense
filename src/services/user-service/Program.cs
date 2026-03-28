@@ -1,5 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using UserService.Api.Data;
+using UserService.Api.Models;
+using UserService.Api.Repositories;
+using UserService.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +15,24 @@ builder.Services.AddOpenApi();
 // Register DbContext
 builder.Services.AddDbContext<UserDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Register application services and repositories (skeletons)
+builder.Services.AddScoped<IUserRepository,UserRepository>();
+// register password hasher
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddScoped<IUserService,UserServiceImpl>();
+
+// refresh token repository and jwt service
+builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+
+// API Versioning
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+});
 
 var app = builder.Build();
 

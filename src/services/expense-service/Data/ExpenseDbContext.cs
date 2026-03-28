@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseService.Api.Data;
 
-public class ExpenseDbContext(DbContextOptions<ExpenseDbContext> options) : DbContext(options), DbContext
+public class ExpenseDbContext(DbContextOptions<ExpenseDbContext> options) : DbContext(options)
 {
     public DbSet<Expense> Expenses { get; set; } = null!;
 }
