@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using UserService.Api.Data;
-using UserService.Api.Models;
 using UserService.Api.Repositories;
 using UserService.Api.Services;
 using UserService.Api.Dtos;
@@ -14,6 +13,12 @@ using UserService.Api.Middleware;
 using Serilog;
 using Serilog.Events;
 using UserService.Api.RabbitMq;
+using Azure.Storage.Blobs;
+using Azure.Storage;
+using UserService.Api.Services.Blob;
+using UserService.Api.Models;
+using UserService.Api.Services.Files;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -84,6 +89,29 @@ builder.Services.AddSingleton<IConnection>(sp =>
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddSingleton<IRabbitMqPublisher, RabbitMqPublisher>();
+
+// Bind Blob settings and register BlobServiceClient + IBlobService
+var blobSection = builder.Configuration.GetSection("Blob");
+var blobConnectionString = blobSection["ConnectionString"];
+var blobAccountName = blobSection["AccountName"];
+var blobAccountKey = blobSection["AccountKey"];
+
+if (!string.IsNullOrEmpty(blobConnectionString))
+{
+    builder.Services.AddSingleton(new BlobServiceClient(blobConnectionString));
+}
+else if (!string.IsNullOrEmpty(blobAccountName) && !string.IsNullOrEmpty(blobAccountKey))
+{
+    var serviceUri = new Uri($"https://{blobAccountName}.blob.core.windows.net");
+    var cred = new StorageSharedKeyCredential(blobAccountName, blobAccountKey);
+    builder.Services.AddSingleton(new BlobServiceClient(serviceUri, cred));
+}
+
+builder.Services.AddScoped<IBlobService, BlobService>();
+// file services + cleanup hosted service
+builder.Services.AddScoped<IUserFileRepository, UserFileRepository>();
+builder.Services.AddScoped<IUserFileService, UserFileService>();
+builder.Services.AddHostedService<UserService.Api.HostedServices.CleanupHostedService>();
 
 
 // API Versioning
